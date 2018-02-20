@@ -9,3 +9,7 @@ owner: your id but idk why i still have this
 ```
 
 needs `ruby-dbus` gem and `discordrb`
+
+## RPC Version
+Because dm4 doesn't like self bots. Lots of bugs, but it works:tm:
+needs `discord-rich-presence` `dbus-native` and probably `discord.js` but idk im sure you're smart go figure it out
