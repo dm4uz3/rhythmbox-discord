@@ -4,7 +4,7 @@ Discord RPC for rhythmbox.
 
 needs `discord-rich-presence` `dbus-native` and probably `discord.js` but idk im sure you're smart go figure it out
 
-Then just run `node discord_friendly.js` and you're cool and good.
+Then just run `node discord_frienly.js` and you're cool and good. (Yes frienly)
 ## Selfbot version 
 Don't use this one unless you have to. Self bots are bad.
 needs `ruby-dbus` gem and `discordrb`
