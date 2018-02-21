@@ -6,8 +6,8 @@ const interfaceName = "org.mpris.MediaPlayer2.Player";
 const objectPath = "/org/mpris/MediaPlayer2";
 const propIfaceName = "org.freedesktop.DBus.Properties"
 var metadata;
-var savedArtist;
-var savedTitle;
+var savedAlbum;
+var savedDetails;
 
 if (!sessionBus) {
   throw new Error("Could not connect to the DBus session bus.");
@@ -39,7 +39,10 @@ service.getInterface(objectPath, interfaceName, (err, iface) => {
       artist = metadata.find(function(element) {
         return element.toString().startsWith("xesam:artist,[object Object],");
       });
-      if (!title && !artist) {
+      album = metadata.find(function(element) {
+        return element.toString().startsWith("xesam:album,[object Object],");
+      });
+      if (!title && !artist && !album) {
         client.updatePresence({
           state: "By TopKek - https://github.com/ToppleKek/rhythmbox-discord",
           details: "Rhythmbox RPC",
@@ -49,12 +52,13 @@ service.getInterface(objectPath, interfaceName, (err, iface) => {
         });        
       }
       else {
-        savedArtist = artist.toString().replace("xesam:artist,[object Object],", "");
-        savedTitle = title.toString().replace("xesam:title,[object Object],", "");
-        console.log(title + artist);
+        savedAlbum = album.toString().replace("xesam:album,[object Object],", "").substring(0, 128);
+        var details = title.toString().replace("xesam:title,[object Object],", "") + " - " + artist.toString().replace("xesam:artist,[object Object],", "");
+        savedDetails = details.substring(0, 128);
+        console.log(title + artist + album);
         client.updatePresence({
-          state: artist.toString().replace("xesam:artist,[object Object],", ""),
-          details: title.toString().replace("xesam:title,[object Object],", ""),
+          state: album.toString().replace("xesam:album,[object Object],", "").substring(0, 128),
+          details: details.substring(0, 128),
           largeImageKey: "rhythmbox",
           smallImageKey: "play",
           instance: true,
@@ -103,8 +107,8 @@ service.getInterface(objectPath, propIfaceName, (err, iface) => {
                 case "Playing":
                   console.log("WE ARE PLAYING");
                   client.updatePresence({
-                    state: savedArtist,
-                    details: savedTitle,
+                    state: savedAlbum,
+                    details: savedDetails,
                     largeImageKey: "rhythmbox",
                     smallImageKey: "play",
                     instance: true,
@@ -113,8 +117,8 @@ service.getInterface(objectPath, propIfaceName, (err, iface) => {
                 case "Paused":
                   console.log("WE ARE PAUSED");
                   client.updatePresence({
-                    state: savedArtist,
-                    details: savedTitle,
+                    state: savedAlbum,
+                    details: savedDetails,
                     largeImageKey: "rhythmbox",
                     smallImageKey: "pause",
                     instance: true,
@@ -143,16 +147,19 @@ service.getInterface(objectPath, propIfaceName, (err, iface) => {
           console.log("title: " + title);
           artist = metaStr.substring(metaStr.indexOf(",xesam:artist,[object Object],") + 30, metaStr.indexOf(",xesam:album,"));
           console.log("artist: " + artist);
-          if (!title || !artist) {
+          album = metaStr.substring(metaStr.indexOf(",xesam:album,[object Object],") + 29, metaStr.indexOf(",xesam:genre,"));
+          console.log("album: " + album);
+          var details = title.substring(0, 128) + " - " + artist.substring(0, 128);
+          if (!title || !artist || !album) {
             console.log("Change, but title and artist was not changed.");
           }
           else {
             if (str !== "Stopped") {
-              savedArtist = artist;
-              savedTitle = title;
+              savedDetails = details.substring(0, 128);
+              savedAlbum = album.substring(0, 128);
               client.updatePresence({
-                state: artist,
-                details: title,
+                state: album.substring(0, 128),
+                details: details.substring(0, 128),
                 largeImageKey: "rhythmbox",
                 smallImageKey: "play",
                 instance: true,
