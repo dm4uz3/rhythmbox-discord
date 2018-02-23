@@ -48,9 +48,15 @@ service.getInterface(objectPath, interfaceName, (err, iface) => {
       service.getInterface(objectPath, playlistIfaceName, (err, iface) => {
         iface.ActivePlaylist((err, str) => {
           if (str) {
-            var largeImgText = "Playlist: " + str[1].toString().split(",")[1];
-            savedLargeImgText = largeImgText;
-            console.log(str[1].toString().split(",")[1]);
+            if (str[1].toString().split(",")[1].length < 1) {
+              var largeImgText = "No playlist";
+              savedLargeImgText = largeImgText;
+            }
+            else {
+              var largeImgText = "Playlist: " + str[1].toString().split(",")[1];
+              savedLargeImgText = largeImgText;
+              console.log(str[1].toString().split(",")[1]);
+            }
           }
           else {
             console.log("No playlist");        
@@ -171,9 +177,15 @@ service.getInterface(objectPath, propIfaceName, (err, iface) => {
           service.getInterface(objectPath, playlistIfaceName, (err, iface) => {
             iface.ActivePlaylist((err, playStr) => {
               if (playStr) {
-                var largeImgText = "Playlist: " + playStr[1].toString().split(",")[1];
-                savedLargeImgText = largeImgText;
-                console.log(playStr[1].toString().split(",")[1]);
+                if (playStr[1].toString().split(",")[1].length < 1) {
+                  var largeImgText = "No playlist";
+                  savedLargeImgText = largeImgText;
+                }
+                else {
+                  var largeImgText = "Playlist: " + playStr[1].toString().split(",")[1];
+                  savedLargeImgText = largeImgText;
+                  console.log(playStr[1].toString().split(",")[1]);
+                }
               }
               else {
                console.log("No playlist");        
